@@ -10,7 +10,16 @@
         let add; // Declare `add` function globally to be accessible outside loadWasm
 
         async function loadWasm() {
-            const wasmBase64 = 'AGFzbQEAAAABBwFgAn9/AX8DAgEABwcBA2FkZAAACgkBBwAgACABags=';
+            //const wasmBase64 = 'AGFzbQEAAAABBwFgAn9/AX8DAgEABwcBA2FkZAAACgkBBwAgACABags=';
+            const wasmBase64 = await new Promise((resolve, reject) => {
+        fs.readFile('/foo/wasmBase64', 'utf8', function(err, data) {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(data);
+            }
+        });
+    });
             const bytes = Uint8Array.from(atob(wasmBase64), c => c.charCodeAt(0));
             const wasmModule = await WebAssembly.instantiate(bytes, {});
             // Assuming the module has an 'add' function; replace with actual exports
